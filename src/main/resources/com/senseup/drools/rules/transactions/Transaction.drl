@@ -1,0 +1,65 @@
+//created on: 19 de out. de 2021
+//package com.senseup.bank.rules
+package com.senseup.drools.rules.transactions
+
+import com.senseup.drools.transactions.domain.TransactionEvent;
+
+declare SuspiciousCustomerEvent
+    @role(event)
+    customerId: String
+    reason: String
+end
+
+declare AlarmTriggered
+    customerId: String
+end
+
+rule "More than 10 transactions in an hour from one client"
+    when
+        $t1: TransactionEvent($cId: customerId)
+        Number(intValue >= 10) from accumulate(
+            $t2: TransactionEvent(
+                this != $t1, 
+                customerId == $cId, 
+                this meets[1h] $t1
+            ),
+            count($t2)
+        )
+        not (SuspiciousCustomerEvent(customerId == $cId, reason == "Many transactions"))
+    then
+    System.out.println("Many transaction:" + $cId);
+        insert(new SuspiciousCustomerEvent($cId, "Many transactions"));
+end
+
+rule "More than 1 transaction of 200 dollars in an hour from the same client"
+    when
+        $t1: TransactionEvent($cId: customerId, totalAmount >= 200.0)
+        $t2: TransactionEvent(
+            this != $t1, 
+            this meets[1h] $t1, 
+            customerId == $cId, 
+            totalAmount >= 200.0
+        )
+        not (SuspiciousCustomerEvent(customerId == $cId, reason == "Two large transactions"))
+    then
+    	System.out.println("Two large transactions: " + $cId);
+        insert(new SuspiciousCustomerEvent($cId, "Two large transactions"));
+end
+
+rule "More than 3 suspicious cases in the day and we warn the owner"
+    when
+        SuspiciousCustomerEvent($cId: customerId)
+        not (AlarmTriggered(customerId == $cId))
+        Number(intValue >= 2) from accumulate(
+            $s: SuspiciousCustomerEvent(customerId == $cId),
+            count($s)
+        )
+    then
+        //warn the owner
+        System.out.println("WARNING: Suspicious fraud case. Client " + $cId);
+        insert(new AlarmTriggered($cId));
+end
+
+
+
+
