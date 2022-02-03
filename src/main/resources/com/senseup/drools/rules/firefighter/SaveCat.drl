@@ -11,8 +11,10 @@ rule "Call a Cat when it is in a tree"
         $p: Person($pet: pet, petCallCount == 0) 
         $cat: Pet(this == $pet, position == "on a limb", type == PetType.CAT)
     then
-       System.out.println($p.getName()+": "+$cat.getName() + " come down!");
-       $p.setPetCallCount($p.getPetCallCount()+1);
+        System.out.println($p.getName()+": "+$cat.getName() + " come down!");
+        modify($p){
+            setPetCallCount($p.getPetCallCount()+1);
+        }
 end
 
 rule "Call the fire department"
@@ -31,9 +33,19 @@ rule "Firefighter gets the cat down"
         $p: Person($pet: pet, petCallCount > 0)
         $cat: Pet(this == $pet, position == "on a limb", type == PetType.CAT)
     then
-       System.out.println("Firefighter " +$f.getName()+": I'm getting the cat down.");
-       $cat.setPosition("on the street");
-       retract($f);
+        System.out.println("Firefighter " +$f.getName()+": I'm getting the cat down.");
+        modify($cat){
+            setPosition("on the street");
+        }
+        retract($f);
 
 end
 
+rule "Hello world!"
+    when
+        Person(petCallCount > 0)
+    then
+       System.out.println("Hello world!" );
+
+
+end
