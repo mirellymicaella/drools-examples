@@ -6,11 +6,11 @@
   <groupId>io.github.aasaru</groupId>
   <version>1.0-SNAPSHOT</version>
 
-  <name>Drools training materials</name>
-  <description>Training materials for my Drools rules writing course in Udemy.</description>
+  <name>Drools presentation examples</name>
+  <description>Examples for Drools 7 presentation</description>
 
   <properties>
-    <java.module.name>io.github.aasaru.drools-training</java.module.name>
+    <java.module.name>com.drools.senseup</java.module.name>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <drools.version>7.59.0.Final</drools.version>
   </properties>
