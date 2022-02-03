@@ -1,6 +1,6 @@
 package com.senseup.drools.rules.firefighter
 
-import com.senseup.drools.firefighter.domain.Person;
+import com.senseup.drools.firefighter.domain.Person; 
 import com.senseup.drools.firefighter.domain.Pet;
 import com.senseup.drools.firefighter.domain.Firefighter;
 import com.senseup.drools.firefighter.domain.Pet.PetType;

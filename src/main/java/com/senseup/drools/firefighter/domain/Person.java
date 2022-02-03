@@ -3,7 +3,7 @@ package com.senseup.drools.firefighter.domain;
 public class Person {
     private String name;
     private Pet pet;
-    private int petCallCount = 0;
+    private int petCallCount = 0 ;
 
     public Person() {
     }
